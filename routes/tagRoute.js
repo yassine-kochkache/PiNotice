@@ -27,7 +27,7 @@ router.put('/tags/:id', async (req, res) => {
 
 // delete tag 
 router.delete('/tags/:id', async (req, res) => {
-    const deletedTag = await User.findByIdAndDelete(req.params.id);
+    const deletedTag = await Tag.findByIdAndDelete(req.params.id);
     res.json({ message: 'Tag deleted successfully' });
 });
 

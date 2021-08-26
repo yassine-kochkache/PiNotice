@@ -2,12 +2,14 @@ const express = require('express');
 const passport = require('passport');
 const router = express.Router();
 const User = require('../models/userSchema')
+const jwt = require("jsonwebtoken");
+
 
 // login route
 
 router.post('/login', async (req, res) => {
 
-    const userDb = await User.findOne({ email: req.body.email, password: req.body.password });
+    const userDb = await User.findOne({ email: req.body.email.toLowerCase(), password: req.body.password });
     if (userDb) {
         // create jwt token
         const tokenData = {
@@ -27,7 +29,8 @@ router.post('/login', async (req, res) => {
 // register route
 
 router.post("/register", async (req, res) => {
-    const userData = req.body
+    let userData = req.body
+    userData.email = userData.email.toLowerCase()
     if (!("firstName" in userData && "lastName" in userData && "email" in userData && "password" in userData && "birthDate" in userData && "phone" in userData && "address" in userData)) {
         res.status(400).json({ message: "Please fill your registration form" })
     } else {

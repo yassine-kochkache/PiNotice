@@ -14,16 +14,16 @@ router.post('/events/', async (req, res) => {
     }
 });
 
-// update tag
-router.put('/tags/:id', async (req, res) => {
-    const updatedTag = await Tag.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updatedTag);
+// update events
+router.put('/events/:id', async (req, res) => {
+    const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.json(updatedEvent);
 })
 
-// delete tag 
-router.delete('/tags/:id', async (req, res) => {
-    const deletedTag = await User.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Tag deleted successfully' });
+// delete event 
+router.delete('/events/:id', async (req, res) => {
+    const deletedEvent = await Event.findByIdAndDelete(req.params.id);
+    res.json({ message: 'Event deleted successfully' });
 });
 
 
