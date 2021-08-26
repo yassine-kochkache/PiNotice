@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 
-const eventSchema = new schema({
+const eventSchema = new Schema({
     image: String,
     title: String,
     description: String,
@@ -11,9 +11,10 @@ const eventSchema = new schema({
     endDateTime: Date,
     location: String,
     owner: { type: Schema.Types.ObjectId, ref: 'User' },
-    tags: [{ tyoe: Schema.Types.ObjectId, ref: 'Tag' }],
+    tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
     availableTicketNumber: Number,
     eventType: String,
 })
 
 const Event = mongoose.model('Event', eventSchema)
+module.exports = Event

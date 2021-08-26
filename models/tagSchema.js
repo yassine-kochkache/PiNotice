@@ -2,9 +2,10 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 
-const tagSchema = new schema({
+const tagSchema = new Schema({
     name: String,
     description: String
 })
 
-const Event = mongoose.model('Tag', tagSchema)
+const Tag = mongoose.model('Tag', tagSchema)
+module.exports = Tag

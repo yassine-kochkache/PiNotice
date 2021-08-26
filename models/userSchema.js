@@ -8,10 +8,11 @@ const userSchema = new Schema({
     password: String,
     events: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
     role: { type: String, default: 'user' },
-    birthDate: Date,
+    birthDate: { type: Date, default: new Date },
     phone: String,
     address: String,
     avatar: String
 });
 
 const User = mongoose.model('Users', userSchema);
+module.exports = User
