@@ -16,7 +16,8 @@ router.post('/login', async (req, res) => {
             userId: userDb._id,
             email: userDb.email,
             firstName: userDb.firstName,
-            lastName: userDb.LastName
+            lastName: userDb.LastName,
+            role: userDb.role
         }
         const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRES_IN });
         res.json({ message: "Connected successfully", token: token })
