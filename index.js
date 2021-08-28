@@ -12,6 +12,10 @@ app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 // dotenv config
 require('dotenv').config()
+// cors
+const cors = require("cors");
+app.use(cors());
+
 // port config
 const port = 3000
 
@@ -25,11 +29,11 @@ app.listen(port, () => {
 const userApi = require('./routes/userRoute')
 const authApi = require('./routes/authRoute')
 const eventApi = require('./routes/eventRoute')
-// const forgottenPasswordApi = require('./routes/forgottenPasswordRoute')
+const forgottenPasswordApi = require('./routes/forgottenPasswordRoute')
 const tagApi = require('./routes/tagRoute')
 
 app.use('', userApi)
 app.use('', authApi)
 app.use('', eventApi)
-// app.use('', forgottenPasswordApi)
+app.use('', forgottenPasswordApi)
 app.use('', tagApi)

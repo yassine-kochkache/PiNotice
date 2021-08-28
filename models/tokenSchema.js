@@ -16,4 +16,5 @@ const tokenSchema = new Schema({
         expires: 3600,// this is the expiry time in seconds (1h)
     },
 });
-module.exports = mongoose.model("Token", tokenSchema);
+const Token = mongoose.model("Token", tokenSchema);
+module.exports = Token;
