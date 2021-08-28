@@ -38,21 +38,7 @@ router.post('/login', async (req, res) => {
         res.status(500).json({ message: 'internal server error' });
     }
 
-    // const userDb = await User.findOne({ email: req.body.email.toLowerCase(), password: req.body.password });
-    // if (userDb) {
-    //     // create jwt token
-    //     const tokenData = {
-    //         userId: userDb._id,
-    //         email: userDb.email,
-    //         firstName: userDb.firstName,
-    //         lastName: userDb.LastName,
-    //         role: userDb.role
-    //     }
-    //     const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY, { expiresIn: process.env.JWT_EXPIRES_IN });
-    //     res.json({ message: "Connected successfully", token: token })
-    // } else {
-    //     res.status(400).json({ message: "Wrong credentials!" })
-    // }
+
 
 });
 
