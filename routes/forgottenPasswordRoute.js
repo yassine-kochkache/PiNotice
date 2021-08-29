@@ -6,6 +6,7 @@ const jwt = require("jsonwebtoken");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const nodemailer = require('nodemailer');
+const sendEmail = require("../utils/email/sendEmail")
 
 // forgot password route
 router.post('/forgottenPassword', async (req, res) => {
@@ -27,41 +28,19 @@ router.post('/forgottenPassword', async (req, res) => {
                     token: hash,
                     createdAt: Date.now(),
                 };
-                const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {
-                    expiresIn: process.env.JWT_RESET_EXPIRES_IN,
-                });
-                // sending email
+                const newToken = await Token.create(tokenData)
 
-
-                // step 1 : create transporter
-                const transporter = nodemailer.createTransport({
-                    service: "gmail",
-                    auth: {
-                        user: process.env.MAIL,
-                        pass: process.env.PASSWORD
-                    },
-
-                });
-
-                // step 2 : mail options
-                const options = {
-                    from: process.env.MAIL,
-                    to: user.email,
-                    subject: "Reset Password Token",
-                    text: 'Hello ' + user.firstName + '\n Here is your reset password Token : \n \n' + token
-                };
-
-                // step 3: sending e-mail
+                const clientURL = 'localhost:3000'
+                const link = `${clientURL}/passwordReset?token=${resetToken}&id=${user._id}`;
 
                 try {
-                    const info = await transporter.sendMail(options);
+                    const info = sendEmail(user.email, "Password Reset Request", { name: user.name, link: link, }, "./template/requestResetPassword.handlebars");
+
                     res.json({ message: "email sent successfully" });
                 } catch (err) {
                     console.log(err);
                     res.status(500).json({ message: "email not sent" });
                 }
-
-
 
             } catch (err) {
                 console.log(err);
@@ -74,8 +53,34 @@ router.post('/forgottenPassword', async (req, res) => {
 
 // rest password route
 
-
-
+router.post('/resetPassword/', async (req, res) => {
+    const saltRounds = 10;
+    let passwordResetToken = await Token.findOne({ userId: req.body.userId });
+    if (!passwordResetToken) {
+        throw new Error("Invalid or expired password reset token");
+    }
+    const isValid = await bcrypt.compare(req.body.token, passwordResetToken.token);
+    if (!isValid) {
+        throw new Error("Invalid or expired password reset token");
+    }
+    const hash = await bcrypt.hash(req.body.password, saltRounds);
+    await User.updateOne(
+        { _id: req.body.userId },
+        { $set: { password: hash } },
+        { new: true }
+    );
+    const user = await User.findById({ _id: req.body.userId });
+    sendEmail(
+        user.email,
+        "Password Reset Successfully",
+        {
+            name: user.name,
+        },
+        "./template/resetPassword.handlebars"
+    );
+    await passwordResetToken.deleteOne();
+    res.status(200).json({ message: "Password Reset Successfully" })
+})
 
 
 
