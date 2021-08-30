@@ -17,35 +17,35 @@ router.post('/events/', async (req, res) => {
 // update events
 router.put('/events/:id', async (req, res) => {
     const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
-    res.json(updatedEvent);
+    res.status(200).json({ message: "event updated successfully", updatedEvent });
 })
 
 // delete event 
 router.delete('/events/:id', async (req, res) => {
     const deletedEvent = await Event.findByIdAndDelete(req.params.id);
-    res.json({ message: 'Event deleted successfully' });
+    res.status(200).json({ message: 'Event deleted successfully' });
 });
 // affect owner
 router.put('/events/affectOwner/:idEevent/:idOwner', async (req, res) => {
     const affectedOwnertoEvent = await Event.findByIdAndUpdate(req.params.idEevent, { owner: req.params.idOwner }, { new: true });
-    res.json(affectedOwnertoEvent);
+    res.status(200).json({ message: "Owner affected successfully", affectedOwnertoEvent });
 });
 
 // desaffect owner
 router.put('/events/desaffectOwner/:idEvent', async (req, res) => {
     const desaffectedOwnertoEvent = await Event.findByIdAndUpdate(req.params.idEvent, { owner: null }, { new: true });
-    res.json(desaffectedOwnertoEvent);
+    res.status(200).json({ message: "Owner desaffected successfully", desaffectedOwnertoEvent });
 });
 
 // affect tag
 router.put('/events/affectTag/:idEvent/:idTag', async (req, res) => {
     const affectedTagToEvent = await Event.findByIdAndUpdate(req.params.idEvent, { $push: { tags: req.params.idTag } }, { new: true });
-    res.json(affectedTagToEvent)
+    res.status(200).json({ message: "Tag affected successfully", affectedTagToEvent })
 })
 // desaffect tag
 router.put('/events/desaffectTag/:idEvent/:idTag', async (req, res) => {
     const desaffectedTagToEvent = await Event.findByIdAndUpdate(req.params.idEvent, { $pull: { tags: req.params.idTag } }, { new: true });
-    res.json(desaffectedTagToEvent)
+    res.status(200).json({ message: "Tag affected successfully", desaffectedTagToEvent })
 })
 
 
@@ -53,13 +53,13 @@ router.put('/events/desaffectTag/:idEvent/:idTag', async (req, res) => {
 // get all full events 
 router.get('/fullEvents', async (req, res) => {
     const fullEvents = await Event.find({}).populate({ path: 'owner tags', select: 'firstName lastName email address avatar name description -_id' });
-    res.json(fullEvents);
+    res.status(200).json(fullEvents);
 });
 
 // get full event by id
 router.get('/fullEvent/:id', async (req, res) => {
     const fullEvent = await Event.findById(req.params.id).populate({ path: 'owner tags', select: 'firstName lastName email address avatar name description -_id' });
-    res.json(fullEvent);
+    res.status(200).json(fullEvent);
 });
 
 module.exports = router;
