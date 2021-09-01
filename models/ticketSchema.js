@@ -7,8 +7,9 @@ const ticketSchema = new Schema({
     event: { type: Schema.Types.ObjectId, ref: 'Event' },
     ticketPath: String,
     QRCodePath: String,
-    QRCodeData: String
+    QRCodeData: String,
+    createdAt: { type: Date, default: new Date }
 })
 
-const Ticket = mongoose.model('Tucket', ticketSchema)
+const Ticket = mongoose.model('Ticket', ticketSchema)
 module.exports = Ticket

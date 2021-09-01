@@ -1,8 +1,10 @@
+
 const express = require('express');
 const router = express.Router();
 const User = require('../models/userSchema')
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt')
+const upload = require('../middlewares/uploadProfileImage')
 
 
 // login route
@@ -44,7 +46,7 @@ router.post('/login', async (req, res) => {
 
 // register route
 
-router.post("/register", async (req, res) => {
+router.post("/register", upload.single('avatar'), async (req, res) => {
     const userVerif = await User.findOne({ email: req.body.email.toLowerCase() })
     if (userVerif) {
         res.status(400).json({ message: "Email already used!" });
@@ -60,7 +62,7 @@ router.post("/register", async (req, res) => {
                 birthDate: req.body.birthDate,
                 phone: req.body.phone,
                 address: req.body.address,
-                avatar: req.body.avatar
+                avatar: req.file.path
             };
             const newUser = await User.create(userData)
             res.status(200).json({ message: "User created successfully", user: newUser })
