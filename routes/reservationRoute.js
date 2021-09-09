@@ -13,16 +13,16 @@ router.post('/reservation/:userId/:eventId', async (req, res) => {
         if (event.availableTicketNumber > 0) {
 
             // checking event type
-            let proceedPayment = false
+            let proceedreservation = false
             let paymentVerif = false
             if (event.eventType == "free") {
-                proceedPayment = true
+                proceedreservation = true
             } else {
                 // process payment
 
 
             }
-            if (proceedPayment) {
+            if (proceedreservation) {
                 // generating a ticket QR Code
                 const ticketPath = 'ticket/' + event.title + '/' + user.firstName + "-" + user.lastName;
                 const qrData =

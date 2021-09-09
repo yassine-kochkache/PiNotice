@@ -3,6 +3,16 @@ const router = express.Router();
 const User = require('../models/userSchema');
 const upload = require('../middlewares/uploadProfileImage')
 
+// get all users
+router.get('/users', async (req, res) => {
+    try {
+        const users = await User.find({});
+        res.status(200).json(users);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' })
+    }
+})
 // get user by id
 router.get('/users/:id', async (req, res) => {
     try {

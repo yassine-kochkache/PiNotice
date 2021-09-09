@@ -4,7 +4,7 @@ const router = express.Router();
 const User = require('../models/userSchema')
 const jwt = require("jsonwebtoken");
 const bcrypt = require('bcrypt')
-const upload = require('../middlewares/uploadProfileImage')
+const upload = require('../middlewares/uploadProfileImage');
 
 
 // login route
@@ -28,7 +28,7 @@ router.post('/login', async (req, res) => {
                 const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {
                     expiresIn: process.env.JWT_EXPIRES_IN,
                 });
-                res.json({ token: token });
+                res.status(200).json({ token: token });
             } else {
                 res.status(400).json({ message: "wrong credentials" });
             }
@@ -45,7 +45,6 @@ router.post('/login', async (req, res) => {
 });
 
 // register route
-
 router.post("/register", upload.single('avatar'), async (req, res) => {
     const userVerif = await User.findOne({ email: req.body.email.toLowerCase() })
     if (userVerif) {
@@ -67,6 +66,7 @@ router.post("/register", upload.single('avatar'), async (req, res) => {
             const newUser = await User.create(userData)
             res.status(200).json({ message: "User created successfully", user: newUser })
         } catch (err) {
+            console.log(err);
             res.status(400).json({ message: "erreur hasing password!" });
         }
     }
