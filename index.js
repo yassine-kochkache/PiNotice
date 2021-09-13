@@ -3,6 +3,8 @@ const morgan = require('morgan')
 const bodyParser = require('body-parser');
 // connect to database 
 const connect = require('./database/connect');
+const bearerStratigy = require('./stratigy/bearerStrategy')
+
 const app = express()
 // morgan config
 app.use(morgan('dev'))
