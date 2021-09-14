@@ -45,5 +45,15 @@ router.delete('/tags/:id', async (req, res) => {
     }
 });
 
+// get all atags
+router.get('/tags', async (req, res) => {
+    try {
+        const tags = await Tag.find({});
+        res.status(200).json(tags);
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' })
+    }
+});
 
 module.exports = router;
