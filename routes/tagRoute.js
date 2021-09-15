@@ -5,8 +5,11 @@ const Tag = require('../models/tagSchema');
 //  add new tag
 router.post('/tags', async (req, res) => {
     try {
-        const tagData = req.body
-        if (!("name" in tagData && "description" in tagData)) {
+        const tagData = {
+            name: req.body.name.toLowerCase(),
+            description: req.body.name.toLowerCase()
+        }
+        if (!("name" in req.body && "description" in req.body)) {
             res.status(400).json({ message: "Empty Field !" })
         } else {
             const foundTag = await Tag.findOne({ name: tagData.name })

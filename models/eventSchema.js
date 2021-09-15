@@ -7,7 +7,7 @@ const eventSchema = new Schema({
     title: String,
     description: String,
     price: { type: Number, default: 0 },
-    startDateTilme: Date,
+    startDateTime: Date,
     endDateTime: Date,
     location: String,
     owner: { type: Schema.Types.ObjectId, ref: 'User' },
