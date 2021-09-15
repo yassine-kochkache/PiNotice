@@ -3,11 +3,25 @@ const router = express.Router();
 const Event = require('../models/eventSchema');
 const upload = require('../middlewares/uploadEventImage')
 const affectEvent = require('../middlewares/affect-event')
-const desaffectEvent = require('../middlewares/desaffect-event')
+const Tag = require('../models/tagSchema')
 
 //  add new event
 router.post('/events/:connectedUserId', upload.single('image'), async (req, res) => {
     try {
+        const tagNamesList = JSON.parse(req.body.tags)
+        let tagIdList = [];
+        for (let i = 0; i < tagNamesList.length; i++) {
+            const element = tagNamesList[i];
+            let tag = await Tag.find({ name: element })
+            let tagId = tag[0]._id;
+            tagIdList.push(tagId)
+        }
+        let myEventType
+        if (req.body.eventType == '0') {
+            myEventType = "Free"
+        } else {
+            myEventType = "Payable"
+        }
         const eventData = {
             image: req.file.path,
             title: req.body.title,
@@ -18,7 +32,8 @@ router.post('/events/:connectedUserId', upload.single('image'), async (req, res)
             location: req.body.location,
             owner: req.params.connectedUserId,
             availableTicketNumber: parseInt(req.body.availableTicketNumber),
-            eventType: req.body.eventType,
+            eventType: myEventType,
+            tags: tagIdList
         }
         if (!("image" in eventData && "title" in eventData && "description" in eventData && "startDateTime" in eventData && "endDateTime" in eventData && "location" in eventData && "availableTicketNumber" in eventData && "eventType" in eventData)) {
             res.status(400).json({ message: "Empty Field !" })
