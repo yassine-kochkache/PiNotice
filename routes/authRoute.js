@@ -55,7 +55,7 @@ router.post("/login", async (req, res) => {
                 const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {
                     expiresIn: process.env.JWT_EXPIRES_IN,
                 });
-                res.status(200).json({ token: token });
+                res.status(200).json({ token: token, userId: tokenData.userId });
             } else {
                 res.status(400).json({ message: "wrong credentials" });
             }
@@ -85,7 +85,7 @@ router.post("/register", upload.single("avatar"), async (req, res) => {
                 birthDate: req.body.birthDate,
                 phone: req.body.phone,
                 address: req.body.address,
-                avatar: req.file.path,
+                avatar: req.file.filename,
             };
             const newUser = await User.create(userData);
             res
