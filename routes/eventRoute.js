@@ -23,7 +23,7 @@ router.post('/events/:connectedUserId', upload.single('image'), async (req, res)
             myEventType = "Payable"
         }
         const eventData = {
-            image: req.file.path,
+            image: req.file.filename,
             title: req.body.title,
             description: req.body.description,
             price: parseInt(req.body.price) || undefined,
