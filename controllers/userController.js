@@ -14,7 +14,7 @@ exports.getAllUsers = async (req, res) => {
 // get user by id
 exports.getUser = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id).select('-password');
+        const user = await User.findById(req.params.id).populate({ path: 'events', populate: 'tags', select: '-owner' });
         res.status(200).json(user);
     } catch (err) {
         console.log(err);
