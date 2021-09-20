@@ -8,10 +8,14 @@ const eventController = require('../controllers/eventController')
 router.post('/events/:connectedUserId', verifyToken, upload.single('image'), eventController.addEvent);
 
 // update events
-router.put('/events/:id', eventController.updateEvent)
+router.put('/events/:id', verifyToken, eventController.updateEvent)
 
 // delete event 
-router.delete('/events/:eventId/:connectedUserId', eventController.deleteEvent);
+router.delete('/events/:eventId/:connectedUserId', verifyToken, eventController.deleteEvent);
+
+// update event's image
+router.put('/events/image/:id', verifyToken, upload.single('image'), eventController.updateEventImage)
+
 // affect owner manually
 router.put('/events/affectOwner/:idEevent/:idOwner', eventController.affectOwner);
 

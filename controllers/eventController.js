@@ -1,5 +1,5 @@
 const Event = require('../models/eventSchema');
-const affectEvent = require('../middlewares/affect-event')
+const desaffectEvent = require('../middlewares/desaffect-event')
 const Tag = require('../models/tagSchema')
 
 // add event
@@ -49,8 +49,39 @@ exports.addEvent = async (req, res) => {
 // update event
 exports.updateEvent = async (req, res) => {
     try {
-        const updatedEvent = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.status(200).json({ message: "event updated successfully", updatedEvent });
+        const tagNamesList = req.body.tags
+        let tagIdList = [];
+        for (let i = 0; i < tagNamesList.length; i++) {
+            const element = tagNamesList[i];
+            let tag = await Tag.find({ name: element })
+            let tagId = tag[0]._id;
+            tagIdList.push(tagId)
+        }
+        let myEventType
+        if (req.body.eventType == '0') {
+            myEventType = "Free"
+        } else {
+            myEventType = "Payable"
+        }
+        const eventData = {
+            title: req.body.title,
+            description: req.body.description,
+            price: parseInt(req.body.price) || undefined,
+            startDateTime: req.body.startDateTime,
+            endDateTime: req.body.endDateTime,
+            location: req.body.location,
+            owner: req.params.connectedUserId,
+            availableTicketNumber: parseInt(req.body.availableTicketNumber),
+            eventType: myEventType,
+            tags: tagIdList
+        }
+        if (!("title" in eventData && "description" in eventData && "startDateTime" in eventData && "endDateTime" in eventData && "location" in eventData && "availableTicketNumber" in eventData && "eventType" in eventData)) {
+            res.status(400).json({ message: "Empty Field !" })
+        } else {
+
+            const updatedEvent = await Event.findByIdAndUpdate(req.params.id, eventData, { new: true });
+            res.status(200).json({ message: "event updated successfully", updatedEvent });
+        }
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: 'Internal server error' })
@@ -62,11 +93,29 @@ exports.deleteEvent = async (req, res) => {
     try {
         const deletedEvent = await Event.findByIdAndDelete(req.params.eventId);
         // desaffect event from owner automatically
-        affectEvent(res, req.params.connectedUserId, req.params.eventId)
+        desaffectEvent(res, req.params.connectedUserId, req.params.eventId)
         res.status(200).json({ message: 'Event deleted successfully' });
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: 'Internal server error' })
+    }
+}
+
+// update event image
+exports.updateEventImage = async (req, res) => {
+    try {
+        const eventData = {
+            image: req.file.filename
+        }
+        if (!("image" in eventData)) {
+            res.status(400).json({ message: "Empty Field !" })
+        } else {
+            const updatedEvent = await Event.findByIdAndUpdate(req.params.id, eventData, { new: true });
+            res.status(200).json({ message: "event pictutre updated successfully", updatedEvent });
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Internal server error" })
     }
 }
 
