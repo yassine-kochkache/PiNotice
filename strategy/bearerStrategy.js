@@ -14,7 +14,7 @@ passport.use(
                 return done(null, user, { scope: "all" });
             }
         } catch (err) {
-            return done(err);
+            return done(null, false);
         }
 
     })
