@@ -27,7 +27,7 @@ exports.forgotPassword = async (req, res) => {
             const clientURL = process.env.CLIENT_URL
             const link = `${clientURL}/#/reset-password/${resetToken}`;
 
-            const info = sendEmail(user.email, "Password Reset Request", { name: user.name, link: link, }, "./template/requestResetPassword.handlebars");
+            const info = await sendEmail(user.email, "Password Reset Request", { name: user.name, link: link, }, "./template/requestResetPassword.handlebars");
             res.json({ message: "email sent successfully" });
 
         }
@@ -47,7 +47,7 @@ exports.resetPassword = async (req, res) => {
         } else {
             const hash = await bcrypt.hash(req.body.password, 10);
             const usertoUpdate = await User.findByIdAndUpdate(passwordResetToken.userId, { password: hash }, { new: true })
-            const info = sendEmail(
+            const info = await sendEmail(
                 usertoUpdate.email,
                 "Password Reset Successfully",
                 {
