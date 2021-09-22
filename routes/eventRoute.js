@@ -17,15 +17,15 @@ router.delete('/events/:eventId/:connectedUserId', verifyToken, eventController.
 router.put('/events/image/:id', verifyToken, upload.single('image'), eventController.updateEventImage)
 
 // affect owner manually
-router.put('/events/affectOwner/:idEevent/:idOwner', eventController.affectOwner);
+router.put('/events/affectOwner/:idEevent/:idOwner', verifyToken, eventController.affectOwner);
 
 // desaffect owner
-router.put('/events/desaffectOwner/:idEvent', eventController.desaffectOwner);
+router.put('/events/desaffectOwner/:idEvent', verifyToken, eventController.desaffectOwner);
 
 // affect tag
-router.put('/events/affectTag/:idEvent/:idTag', eventController.affectTag)
+router.put('/events/affectTag/:idEvent/:idTag', verifyToken, eventController.affectTag)
 // desaffect tag
-router.put('/events/desaffectTag/:idEvent/:idTag', eventController.desaffectTag)
+router.put('/events/desaffectTag/:idEvent/:idTag', verifyToken, eventController.desaffectTag)
 
 // get all full events 
 router.get('/fullEvents', eventController.getAllFullEvents);

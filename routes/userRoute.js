@@ -2,34 +2,36 @@ const express = require('express');
 const router = express.Router();
 const upload = require('../middlewares/uploadProfileImage')
 const userController = require('../controllers/userController')
+const verifyToken = require('../middlewares/authorizationToken')
+
 
 // get all users
-router.get('/users', userController.getAllUsers)
+router.get('/users', verifyToken, userController.getAllUsers)
 
 // get user by id
 router.get('/users/:id', userController.getUser)
 
 // update user
 
-router.put('/users/:id', userController.updateUser);
+router.put('/users/:id', verifyToken, userController.updateUser);
 
 // update user's avatar
-router.put('/users-avatar/:id', upload.single('avatar'), userController.updateUsersAvatar)
+router.put('/users-avatar/:id', verifyToken, upload.single('avatar'), userController.updateUsersAvatar)
 
 // delete user 
-router.delete('/users/:id', userController.deletUser);
+router.delete('/users/:id', verifyToken, userController.deletUser);
 
 
 // affect event manually 
-router.put('/users/affectEvent/:idUser/:idEvent', userController.affectEvent)
+router.put('/users/affectEvent/:idUser/:idEvent', verifyToken, userController.affectEvent)
 
 // desaffect event
-router.put('/users/desaffectEvent/:idUser/:idEvent', userController.desaffectEvent)
+router.put('/users/desaffectEvent/:idUser/:idEvent', verifyToken, userController.desaffectEvent)
 
 // affect admin role
-router.put('/users/affectRole/:idUser', userController.affectAdminRole)
+router.put('/users/affectRole/:idUser', verifyToken, userController.affectAdminRole)
 
 // desaffect admin role
-router.put('/users/desaffectRole/:idUser', userController.desaffectAdminRole)
+router.put('/users/desaffectRole/:idUser', verifyToken, userController.desaffectAdminRole)
 
 module.exports = router;

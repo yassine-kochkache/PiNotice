@@ -1,17 +1,16 @@
 const express = require('express')
 const morgan = require('morgan')
-const bodyParser = require('body-parser');
 // connect to database 
 const connect = require('./database/connect');
-const bearerStratigy = require('./stratigy/bearerStrategy')
+const bearerStratigy = require('./strategy/bearerStrategy')
 
 const app = express()
 // morgan config
 app.use(morgan('dev'))
 // parse application/json
-app.use(bodyParser.json())
+app.use(express.json())
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: false }))
 // dotenv config
 require('dotenv').config()
 // cors
@@ -24,9 +23,7 @@ const port = 3000
 app.get('/', (req, res) => {
     res.json({ message: 'Hello World!' })
 })
-app.listen(port, () => {
-    console.log(`Application listening at http://localhost:${port}`)
-})
+
 
 const userApi = require('./routes/userRoute')
 const authApi = require('./routes/authRoute')
@@ -47,3 +44,7 @@ app.use('', forgottenPasswordApi)
 app.use('', tagApi)
 app.use('', ticketApi)
 app.use('', reservationApi)
+
+app.listen(port, () => {
+    console.log(`Application listening at http://localhost:${port}`)
+})

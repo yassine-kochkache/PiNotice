@@ -25,10 +25,17 @@ exports.getUser = async (req, res) => {
 // update user
 exports.updateUser = async (req, res) => {
     try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
         res.status(200).json({ message: "User updated successfully" });
-    } catch (err) {
-        console.log(err);
+    } catch (error) {
+        console.log(error);
+        if (error.name === "ValidationError") {
+            let errors = {};
+            Object.keys(error.errors).forEach((key) => {
+                errors[key] = error.errors[key].message;
+            });
+            return res.status(400).send(errors);
+        }
         res.status(500).json({ message: 'Internal server error' })
     }
 }

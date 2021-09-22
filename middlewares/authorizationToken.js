@@ -15,9 +15,17 @@ async (req, res) => {
             lastName: decodedToken.lastName,
             role: decodedToken.role,
         };
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ message: "internal server error" });
+    } catch (error) {
+        // console.log(error.name);
+        if (error.name === "TokenExpiredError") {
+            let errors = {};
+            Object.keys(error.errors).forEach((key) => {
+                errors[key] = error.errors[key].message;
+            });
+            return res.status(401).send(errors);
+        } else {
+            res.status(500).json({ message: "internal server error" });
+        }
     }
 }
 
