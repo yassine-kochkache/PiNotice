@@ -23,9 +23,7 @@ const port = 3000
 app.get('/', (req, res) => {
     res.json({ message: 'Hello World!' })
 })
-app.listen(port, () => {
-    console.log(`Application listening at http://localhost:${port}`)
-})
+
 
 const userApi = require('./routes/userRoute')
 const authApi = require('./routes/authRoute')
@@ -46,3 +44,7 @@ app.use('', forgottenPasswordApi)
 app.use('', tagApi)
 app.use('', ticketApi)
 app.use('', reservationApi)
+
+app.listen(port, () => {
+    console.log(`Application listening at http://localhost:${port}`)
+})
