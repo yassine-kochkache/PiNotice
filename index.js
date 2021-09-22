@@ -2,7 +2,7 @@ const express = require('express')
 const morgan = require('morgan')
 // connect to database 
 const connect = require('./database/connect');
-const bearerStratigy = require('./stratigy/bearerStrategy')
+const bearerStratigy = require('./strategy/bearerStrategy')
 
 const app = express()
 // morgan config
