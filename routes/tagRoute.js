@@ -14,4 +14,7 @@ router.delete('/tags/:id', tagController.deleteTag);
 // get all atags
 router.get('/tags', tagController.getTags);
 
+// get tag byId 
+router.get('/tags/:id', tagController.getTagById)
+
 module.exports = router;

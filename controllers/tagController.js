@@ -56,3 +56,18 @@ exports.getTags = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' })
     }
 }
+
+// get tag by id
+exports.getTagById = async (req, res) => {
+    try {
+        const tag = await Tag.findById(req.params.id)
+        if (tag) {
+            res.status(200).json({ tag: tag })
+        } else {
+            res.status(404).json({ message: "Tag not found" })
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: "Internal server error" })
+    }
+}
