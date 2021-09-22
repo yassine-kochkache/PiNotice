@@ -1,6 +1,5 @@
 const express = require('express')
 const morgan = require('morgan')
-const bodyParser = require('body-parser');
 // connect to database 
 const connect = require('./database/connect');
 const bearerStratigy = require('./stratigy/bearerStrategy')
@@ -9,9 +8,9 @@ const app = express()
 // morgan config
 app.use(morgan('dev'))
 // parse application/json
-app.use(bodyParser.json())
+app.use(express.json())
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: false }))
+app.use(express.urlencoded({ extended: false }))
 // dotenv config
 require('dotenv').config()
 // cors
