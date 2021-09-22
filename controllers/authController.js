@@ -20,7 +20,7 @@ exports.login = async (req, res) => {
                     role: userDb.role,
                 };
                 const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {
-                    expiresIn: process.env.JWT_EXPIRES_IN,
+                    expiresIn: 10,
                 });
                 res.status(200).json({ token: token, userId: tokenData.userId });
             } else {
@@ -37,11 +37,11 @@ exports.login = async (req, res) => {
 
 // register function
 exports.register = async (req, res) => {
-    const userVerif = await User.findOne({ email: req.body.email.toLowerCase() });
-    if (userVerif) {
-        res.status(400).json({ message: "Email already used!" });
-    } else {
-        try {
+    try {
+        const userVerif = await User.findOne({ email: req.body.email.toLowerCase() });
+        if (userVerif) {
+            res.status(400).json({ message: "Email already used!" });
+        } else {
             const saltRounds = 10;
             const hash = await bcrypt.hash(req.body.password, saltRounds);
             const userData = {
@@ -58,9 +58,16 @@ exports.register = async (req, res) => {
             res
                 .status(200)
                 .json({ message: "User created successfully", user: newUser });
-        } catch (err) {
-            console.log(err);
-            res.status(400).json({ message: "erreur hasing password!" });
         }
+    } catch (error) {
+        console.log(error);
+        if (error.name === "ValidationError") {
+            let errors = {};
+            Object.keys(error.errors).forEach((key) => {
+                errors[key] = error.errors[key].message;
+            });
+            return res.status(400).send(errors);
+        }
+        res.status(500).json({ message: "Internal server error!" });
     }
 }
