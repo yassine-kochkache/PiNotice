@@ -1,8 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const User = require("../models/userSchema");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
 const upload = require("../middlewares/uploadProfileImage");
 const authController = require("../controllers/authController")
 
