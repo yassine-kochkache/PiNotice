@@ -3,9 +3,9 @@ const Event = require('../models/eventSchema');
 const User = require('../models/userSchema')
 const qr = require('qrcode')
 const sendEmail = require("../utils/email/sendTicketEmail")
-// const pdf = require("pdf-creator-node");
-// const fs = require("fs");
-// const html = fs.readFileSync("../utils/email/template/ticketTemplate.html", "utf8");
+const pdf = require("pdf-creator-node");
+const fs = require("fs");
+const html = fs.readFileSync("./utils/email/template/ticketTemplate.html", "utf8");
 
 exports.reservation = async (req, res) => {
     try {
@@ -40,30 +40,18 @@ exports.reservation = async (req, res) => {
 
             // const modifiedTickets = event.availableTicketNumber - 1
             // const updatedEvent = await Event.findByIdAndUpdate(event._id, { availableTicketNumber: modifiedTickets }, { new: true })
-
-            // const options = {
-            //     format: "A4",
-            //     orientation: "portrait",
-            //     border: "10mm",
-            //     header: {
-            //         height: "45mm",
-            //         contents: '<div style="text-align: center;">Author: Shyam Hajare</div>'
-            //     },
-            //     footer: {
-            //         height: "28mm",
-            //         contents: {
-            //             first: 'Cover page',
-            //             2: 'Second page',
-            //             default: '<span style="color: #444;">{{page}}</span>/<span>{{pages}}</span>', // fallback value
-            //             last: 'Last Page'
-            //         }
-            //     }
-            // };
-            // const ticket = pdf.create(html, options).then((res) => {
-            //     console.log(res);
-            // }).catch((err) => {
-            //     console.log(err);
-            // })
+            const Document = {
+                html: '<h1>hello</h1>',
+                data: {},
+                path: `./tickets/${newTicket._id}.pdf`,
+                type: ''
+            }
+            const pdfOptions = {
+                format: "A4",
+                orientation: "portrait",
+                border: "10mm",
+            };
+            await pdf.create(Document, pdfOptions);
             // const info = await sendEmail(user.email, "Event ticket", { name: user.firstName }, "./template/reservationSuccess.handlebars", ticket);
 
             res.status(200).json({ message: "Reservation success", ticket: ticketData })

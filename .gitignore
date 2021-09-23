@@ -6,3 +6,5 @@ uploads/event-pics/*
 !uploads/event-pics/.gitkeep
 qrCodes/*
 !qrCodes/.gitkeep
+tickets/*
+!tickets/.gitkeep
