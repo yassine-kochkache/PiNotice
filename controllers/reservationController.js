@@ -27,14 +27,18 @@ exports.reservation = async (req, res) => {
             const startDate = new Date(event.startDateTime);
             const startDateTime = `${startDate.getDate()}/${startDate.getMonth()}/${startDate.getFullYear()}  ${startDate.getHours()}:${startDate.getMinutes()}`;
             const endDate = new Date(event.endDateTime);
-            const endtDateTime = `${endDate.getDate()}/${endDate.getMonth()}/${endDate.getFullYear()}  ${endDate.getHours()}:${endDate.getMinutes()}`;
+            const endDateTime = `${endDate.getDate()}/${endDate.getMonth()}/${endDate.getFullYear()}  ${endDate.getHours()}:${endDate.getMinutes()}`;
+            const reservationTime = new Date(newTicket.createdAt)
+            const ReservationDateTime = `${reservationTime.getDate()}/${reservationTime.getMonth()}/${reservationTime.getFullYear()}  ${reservationTime.getHours()}:${reservationTime.getMinutes()}`;
+
             const qrData = {
                 eventTitle: event.title,
                 userName: user.firstName,
                 userEmail: user.email,
                 startDate: startDateTime,
-                endDate: endtDateTime,
+                endDate: endDateTime,
                 location: event.location,
+                reservationDate: ReservationDateTime
             }
             await qr.toFile(`./qrCodes/${newTicket._id}.png`, JSON.stringify(qrData));
             // update new ticket QR code data and path 
@@ -52,10 +56,12 @@ exports.reservation = async (req, res) => {
                 qrcodeLink: `http://localhost:3000/qrCodes/${newTicket._id}.png`,
                 eventTitle: event.title,
                 userName: user.firstName,
+                userLast: user.lastName,
                 userEmail: user.email,
                 startDate: startDateTime,
-                endDate: endtDateTime,
+                endDate: endDateTime,
                 location: event.location,
+                reservationDate: ReservationDateTime
             }
             const render = ejs.render(html, renderOptions);
             const Document = {

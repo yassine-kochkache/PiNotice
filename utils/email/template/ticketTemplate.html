@@ -1,15 +1,42 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <title>Hello world!</title>
+    <title>Ticket</title>
+    <style></style>
   </head>
   <body>
-    <h1>User List</h1>
+    <h2>Personnal Infos</h2>
     <ul>
-      <li>Name: <%= userName %></li>
-      <li>event: <%= eventTitle %></li>
-      <br />
+      <li>Firs Name : <%= userName %></li>
+      <li>Last Name : <%= userLast %></li>
+      <li>Email : <%= userEmail %></li>
     </ul>
-    <img src="<%= qrcodeLink %>" alt="qc code" />
+    <h2>Event Infos</h2>
+    <ul>
+      <li>Event: <%= eventTitle %></li>
+      <li>Starts at : <%= startDate %></li>
+      <li>Ends at : <%= endDate %></li>
+      <li>Location :<%= location %></li>
+    </ul>
+    <h3>Booking Time : <small><%= reservationDate %></small></h3>
+    <h2>QR Code:</h2>
+    <div>
+      <img src="<%= qrcodeLink %>" alt="qc code" />
+    </div>
+    <br />
+    <br />
+    <small
+      >In case of problem, refund request or complaint please contact us via
+      :</small
+    >
+    <ul>
+      <li><small>Email: zaher@admin.com</small></li>
+      <li><small>phone: +216 98 000 000</small></li>
+    </ul>
+    <br />
+    <small
+      >Best Regards <br />
+      EventCode Team</small
+    >
   </body>
 </html>
