@@ -4,3 +4,5 @@ uploads/avatars/*
 uploads/event-pics/*
 !uploads/avatars/.gitkeep
 !uploads/event-pics/.gitkeep
+qrCodes/*
+!qrCodes/.gitkeep
