@@ -1,5 +1,4 @@
 
-const { STATUS_CODES } = require('http');
 const multer = require('multer');
 const path = require("path");
 const User = require('../models/userSchema');
