@@ -22,7 +22,7 @@ exports.login = async (req, res) => {
                 const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {
                     expiresIn: 10,
                 });
-                res.status(200).json({ token: token, userId: tokenData.userId });
+                res.status(200).json({ token: token });
             } else {
                 res.status(400).json({ message: "wrong credentials" });
             }
