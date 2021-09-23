@@ -2,7 +2,7 @@ const Ticket = require('../models/ticketSchema');
 const Event = require('../models/eventSchema');
 const User = require('../models/userSchema')
 const qr = require('qrcode')
-const sendEmail = require("../utils/email/sendTicketEmail")
+const sendEmail = require("../utils/email/sendEmail")
 const pdf = require("pdf-creator-node");
 const fs = require("fs");
 const html = fs.readFileSync("./utils/email/template/ticketTemplate.html", "utf8");
@@ -52,7 +52,12 @@ exports.reservation = async (req, res) => {
                 border: "10mm",
             };
             await pdf.create(Document, pdfOptions);
-            // const info = await sendEmail(user.email, "Event ticket", { name: user.firstName }, "./template/reservationSuccess.handlebars", ticket);
+
+            // send a mail 
+            const attachments = [
+                { filename: 'ticket.pdf', content: fs.createReadStream(`./tickets/${newTicket._id}.pdf`) }
+            ]
+            const info = await sendEmail(user.email, "Event ticket", { name: user.firstName }, "./template/reservationSuccess.handlebars", attachments);
 
             res.status(200).json({ message: "Reservation success", ticket: ticketData })
         } else {

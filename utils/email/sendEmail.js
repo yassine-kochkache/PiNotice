@@ -3,7 +3,7 @@ const handlebars = require("handlebars");
 const fs = require("fs");
 const path = require("path");
 
-const sendEmail = (email, subject, payload, template) => {
+const sendEmail = (email, subject, payload, template, attachments = []) => {
   return new Promise(async (resolve, reject) => {
     try {
       // create reusable transporter object using the default SMTP transport
@@ -24,6 +24,7 @@ const sendEmail = (email, subject, payload, template) => {
           to: email,
           subject: subject,
           html: compiledTemplate(payload),
+          attachments: attachments
         };
       };
 
