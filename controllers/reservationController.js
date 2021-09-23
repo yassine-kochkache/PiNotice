@@ -24,10 +24,17 @@ exports.reservation = async (req, res) => {
             }
             const newTicket = await Ticket.create(ticketData);
             // generating a ticket QR Code
+            const startDate = new Date(event.startDateTime);
+            const startDateTime = `${startDate.getDate()}/${startDate.getMonth()}/${startDate.getFullYear()}  ${startDate.getHours()}:${startDate.getMinutes()}`;
+            const endDate = new Date(event.endDateTime);
+            const endtDateTime = `${endDate.getDate()}/${endDate.getMonth()}/${endDate.getFullYear()}  ${endDate.getHours()}:${endDate.getMinutes()}`;
             const qrData = {
                 eventTitle: event.title,
                 userName: user.firstName,
                 userEmail: user.email,
+                startDate: startDateTime,
+                endDate: endtDateTime,
+                location: event.location,
             }
             await qr.toFile(`./qrCodes/${newTicket._id}.png`, JSON.stringify(qrData));
             // update new ticket QR code data and path 
