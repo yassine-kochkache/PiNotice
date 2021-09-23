@@ -59,6 +59,10 @@ exports.reservation = async (req, res) => {
             ]
             const info = await sendEmail(user.email, "Event ticket", { name: user.firstName }, "./template/reservationSuccess.handlebars", attachments);
 
+            // update the ticketpath 
+            newTicket.ticketPath = `http://localhost:3000/tickets/${newTicket._id}.pdf`;
+            await newTicket.save();
+            // return statement
             res.status(200).json({ message: "Reservation success", ticket: ticketData })
         } else {
             res.status(400).json({ message: "Tickets for this event are out of Stock" })

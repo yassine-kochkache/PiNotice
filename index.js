@@ -37,6 +37,8 @@ const reservationApi = require('./routes/reservationRoute')
 app.use('/event-pics', express.static('uploads/event-pics'))
 app.use('/avatar', express.static('uploads/avatars'))
 app.use('/qrCodes', express.static('qrCodes'))
+app.use('/tickets', express.static('tickets'))
+
 
 
 app.use('', userApi)
