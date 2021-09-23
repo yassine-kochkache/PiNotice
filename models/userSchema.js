@@ -30,6 +30,9 @@ const userSchema = new Schema({
     phone: { type: String, required: true },
     address: { type: String, required: true },
     avatar: { type: String, required: true },
+}, {
+    timestamps: true,
+    versionKey: false
 });
 
 const User = mongoose.model('User', userSchema);
