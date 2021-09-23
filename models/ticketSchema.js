@@ -8,7 +8,9 @@ const ticketSchema = new Schema({
     ticketPath: String,
     QRCodePath: String,
     QRCodeData: String,
-    createdAt: { type: Date, default: new Date }
+}, {
+    timestamps: true,
+    versionKey: false
 })
 
 const Ticket = mongoose.model('Ticket', ticketSchema)

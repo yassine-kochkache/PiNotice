@@ -14,6 +14,9 @@ const eventSchema = new Schema({
     tags: [{ type: Schema.Types.ObjectId, ref: 'Tag' }],
     availableTicketNumber: Number,
     eventType: String,
+}, {
+    timestamps: true,
+    versionKey: false
 })
 
 const Event = mongoose.model('Event', eventSchema)
