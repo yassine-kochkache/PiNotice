@@ -20,7 +20,7 @@ exports.login = async (req, res) => {
                     role: userDb.role,
                 };
                 const token = await jwt.sign(tokenData, process.env.JWT_SECRET_KEY, {
-                    expiresIn: 10,
+                    expiresIn: process.env.JWT_EXPIRES_IN,
                 });
                 res.status(200).json({ token: token });
             } else {
