@@ -3,6 +3,7 @@ const router = express.Router();
 const upload = require('../middlewares/uploadProfileImage')
 const userController = require('../controllers/userController')
 const verifyToken = require('../middlewares/authorizationToken')
+const updateAvatar = require('../middlewares/updateProfileAvatar')
 
 
 // get all users
@@ -16,7 +17,7 @@ router.get('/users/:id', userController.getUser)
 router.put('/users/:id', verifyToken, userController.updateUser);
 
 // update user's avatar
-router.put('/users-avatar/:id', verifyToken, upload.single('avatar'), userController.updateUsersAvatar)
+router.put('/users-avatar/:id', verifyToken, updateAvatar.single('avatar'), userController.updateUsersAvatar)
 
 // delete user 
 router.delete('/users/:id', verifyToken, userController.deletUser);

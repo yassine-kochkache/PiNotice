@@ -1,4 +1,5 @@
 const User = require('../models/userSchema');
+var fs = require('fs');
 
 // get all users
 exports.getAllUsers = async (req, res) => {
@@ -43,7 +44,11 @@ exports.updateUser = async (req, res) => {
 // update user's avatar
 exports.updateUsersAvatar = async (req, res) => {
     try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, { avatar: req.file.path }, { new: true });
+        const user = await User.findById(req.params.id)
+        const filePath = './uploads/avatars/' + user.avatar
+        fs.unlinkSync(filePath);
+        const newBody = { avatar: req.file.filename }
+        const updatedUser = await User.findByIdAndUpdate(req.params.id, newBody, { new: true });
         res.status(200).json({ message: "User's avatar updated successfully" });
     } catch (err) {
         console.log(err);
