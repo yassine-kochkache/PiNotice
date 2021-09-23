@@ -1,5 +1,6 @@
 const Event = require('../models/eventSchema');
 const desaffectEvent = require('../middlewares/desaffect-event')
+const affectEvent = require('../middlewares/affect-event')
 const Tag = require('../models/tagSchema')
 
 // add event
