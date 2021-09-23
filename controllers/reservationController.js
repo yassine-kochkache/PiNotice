@@ -5,7 +5,7 @@ const qr = require('qrcode')
 const sendEmail = require("../utils/email/sendEmail")
 const pdf = require("pdf-creator-node");
 const fs = require("fs");
-const html = fs.readFileSync("./utils/email/template/ticketTemplate.html", "utf8");
+const ejs = require("ejs");
 
 exports.reservation = async (req, res) => {
     try {
@@ -47,8 +47,19 @@ exports.reservation = async (req, res) => {
 
             // const modifiedTickets = event.availableTicketNumber - 1
             // const updatedEvent = await Event.findByIdAndUpdate(event._id, { availableTicketNumber: modifiedTickets }, { new: true })
+            const html = fs.readFileSync("./utils/email/template/ticketTemplate.html", "utf8");
+            const renderOptions = {
+                qrcodeLink: `http://localhost:3000/qrCodes/${newTicket._id}.png`,
+                eventTitle: event.title,
+                userName: user.firstName,
+                userEmail: user.email,
+                startDate: startDateTime,
+                endDate: endtDateTime,
+                location: event.location,
+            }
+            const render = ejs.render(html, renderOptions);
             const Document = {
-                html: '<h1>hello</h1>',
+                html: render,
                 data: {},
                 path: `./tickets/${newTicket._id}.pdf`,
                 type: ''
