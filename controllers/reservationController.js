@@ -25,11 +25,11 @@ exports.reservation = async (req, res) => {
             const newTicket = await Ticket.create(ticketData);
             // generating a ticket QR Code
             const startDate = new Date(event.startDateTime);
-            const startDateTime = `${startDate.getDate()}/${startDate.getMonth()}/${startDate.getFullYear()}  ${startDate.getHours()}:${startDate.getMinutes()}`;
+            const startDateTime = `${String(startDate.getDate()).padStart(2, "0")}/${String(startDate.getMonth() + 1).padStart(2, "0")}/${startDate.getFullYear()}  ${String(startDate.getHours()).padStart(2, "0")}:${String(startDate.getMinutes()).padStart(2, "0")}`;
             const endDate = new Date(event.endDateTime);
-            const endDateTime = `${endDate.getDate()}/${endDate.getMonth()}/${endDate.getFullYear()}  ${endDate.getHours()}:${endDate.getMinutes()}`;
+            const endDateTime = `${String(endDate.getDate()).padStart(2, "0")}/${String(endDate.getMonth() + 1).padStart(2, "0")}/${endDate.getFullYear()} ${String(endDate.getHours()).padStart(2, "0")}:${String(endDate.getMinutes()).padStart(2, "0")}`;
             const reservationTime = new Date(newTicket.createdAt)
-            const ReservationDateTime = `${reservationTime.getDate()}/${reservationTime.getMonth()}/${reservationTime.getFullYear()}  ${reservationTime.getHours()}:${reservationTime.getMinutes()}`;
+            const ReservationDateTime = `${String(reservationTime.getDate()).padStart(2, "0")}/${String(reservationTime.getMonth() + 1).padStart(2, "0")}/${reservationTime.getFullYear()}  ${String(reservationTime.getHours()).padStart(2, "0")}:${String(reservationTime.getMinutes()).padStart(2, "0")}`;
 
             const qrData = {
                 eventTitle: event.title,
