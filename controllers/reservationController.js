@@ -38,7 +38,8 @@ exports.reservation = async (req, res) => {
                 startDate: startDateTime,
                 endDate: endDateTime,
                 location: event.location,
-                reservationDate: ReservationDateTime
+                reservationDate: ReservationDateTime,
+                price: event.price + '$'
             }
             await qr.toFile(`./qrCodes/${newTicket._id}.png`, JSON.stringify(qrData));
             // update new ticket QR code data and path 
@@ -49,8 +50,8 @@ exports.reservation = async (req, res) => {
             // taking one ticket out of stock
             const ticketPath = 'ticket/' + event.title + '/' + user.firstName + "-" + user.lastName;
 
-            // const modifiedTickets = event.availableTicketNumber - 1
-            // const updatedEvent = await Event.findByIdAndUpdate(event._id, { availableTicketNumber: modifiedTickets }, { new: true })
+            const modifiedTickets = event.availableTicketNumber - 1
+            const updatedEvent = await Event.findByIdAndUpdate(event._id, { availableTicketNumber: modifiedTickets }, { new: true })
             const html = fs.readFileSync("./utils/email/template/ticketTemplate.html", "utf8");
             const renderOptions = {
                 qrcodeLink: `http://localhost:3000/qrCodes/${newTicket._id}.png`,
@@ -61,7 +62,8 @@ exports.reservation = async (req, res) => {
                 startDate: startDateTime,
                 endDate: endDateTime,
                 location: event.location,
-                reservationDate: ReservationDateTime
+                reservationDate: ReservationDateTime,
+                price: event.price
             }
             const render = ejs.render(html, renderOptions);
             const Document = {

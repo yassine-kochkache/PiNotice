@@ -28,9 +28,9 @@ router.put('/events/affectTag/:idEvent/:idTag', verifyToken, eventController.aff
 router.put('/events/desaffectTag/:idEvent/:idTag', verifyToken, eventController.desaffectTag)
 
 // get all full events 
-router.get('/fullEvents', eventController.getAllFullEvents);
+router.get('/fullEvents', verifyToken, eventController.getAllFullEvents);
 
 // get full event by id
-router.get('/fullEvent/:id', eventController.getEvent);
+router.get('/fullEvent/:id', verifyToken, eventController.getEvent);
 
 module.exports = router;
