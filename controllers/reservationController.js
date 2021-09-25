@@ -38,7 +38,8 @@ exports.reservation = async (req, res) => {
                 startDate: startDateTime,
                 endDate: endDateTime,
                 location: event.location,
-                reservationDate: ReservationDateTime
+                reservationDate: ReservationDateTime,
+                price: event.price + '$'
             }
             await qr.toFile(`./qrCodes/${newTicket._id}.png`, JSON.stringify(qrData));
             // update new ticket QR code data and path 
@@ -61,7 +62,8 @@ exports.reservation = async (req, res) => {
                 startDate: startDateTime,
                 endDate: endDateTime,
                 location: event.location,
-                reservationDate: ReservationDateTime
+                reservationDate: ReservationDateTime,
+                price: event.price
             }
             const render = ejs.render(html, renderOptions);
             const Document = {
