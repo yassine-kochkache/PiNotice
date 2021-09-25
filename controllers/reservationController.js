@@ -49,8 +49,8 @@ exports.reservation = async (req, res) => {
             // taking one ticket out of stock
             const ticketPath = 'ticket/' + event.title + '/' + user.firstName + "-" + user.lastName;
 
-            // const modifiedTickets = event.availableTicketNumber - 1
-            // const updatedEvent = await Event.findByIdAndUpdate(event._id, { availableTicketNumber: modifiedTickets }, { new: true })
+            const modifiedTickets = event.availableTicketNumber - 1
+            const updatedEvent = await Event.findByIdAndUpdate(event._id, { availableTicketNumber: modifiedTickets }, { new: true })
             const html = fs.readFileSync("./utils/email/template/ticketTemplate.html", "utf8");
             const renderOptions = {
                 qrcodeLink: `http://localhost:3000/qrCodes/${newTicket._id}.png`,
