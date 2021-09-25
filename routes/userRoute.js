@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const upload = require('../middlewares/uploadProfileImage')
 const userController = require('../controllers/userController')
 const verifyToken = require('../middlewares/authorizationToken')
 const updateAvatar = require('../middlewares/updateProfileAvatar')
