@@ -1,5 +1,6 @@
 const User = require('../models/userSchema');
-var fs = require('fs');
+const fs = require('fs');
+const bcrypt = require('bcrypt')
 
 // get all users
 exports.getAllUsers = async (req, res) => {
@@ -105,6 +106,26 @@ exports.desaffectAdminRole = async (req, res) => {
     try {
         const desaffectedRole = await User.findByIdAndUpdate(req.params.idUser, { role: "user" }, { new: true });
         res.json({ message: "Admin role desaffected successfully" });
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' })
+    }
+}
+
+// reset password
+exports.resetPassword = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id)
+        const oldPassword = await bcrypt.hash(req.body.oldPassword, 10);
+        const compare = await bcrypt.compare(user.password, oldPassword)
+        if (compare == true) {
+            const newPassword = await bcrypt.hash(req.body.newPassword, 10)
+            const newUser = await User.findByIdAndUpdate(req.params.id, { password: newPassword })
+            res.status(200).json({ message: "Password reset successfully" })
+        } else {
+            res.status(400).json({ message: "Invalid password" })
+        }
+
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: 'Internal server error' })

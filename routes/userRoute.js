@@ -4,7 +4,6 @@ const userController = require('../controllers/userController')
 const verifyToken = require('../middlewares/authorizationToken')
 const updateAvatar = require('../middlewares/updateProfileAvatar')
 
-
 // get all users
 router.get('/users', verifyToken, userController.getAllUsers)
 
@@ -33,5 +32,8 @@ router.put('/users/affectRole/:idUser', verifyToken, userController.affectAdminR
 
 // desaffect admin role
 router.put('/users/desaffectRole/:idUser', verifyToken, userController.desaffectAdminRole)
+
+// reset password
+router.put('/users/reset-password/:id', userController.resetPassword)
 
 module.exports = router;
