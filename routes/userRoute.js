@@ -34,6 +34,6 @@ router.put('/users/affectRole/:idUser', verifyToken, userController.affectAdminR
 router.put('/users/desaffectRole/:idUser', verifyToken, userController.desaffectAdminRole)
 
 // reset password
-router.put('/users/reset-password/:id', userController.resetPassword)
+router.put('/users/reset-password/:id', verifyToken, userController.resetPassword)
 
 module.exports = router;
