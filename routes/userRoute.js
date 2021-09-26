@@ -36,4 +36,7 @@ router.put('/users/desaffectRole/:idUser', verifyToken, userController.desaffect
 // reset password
 router.put('/users/reset-password/:id', verifyToken, userController.resetPassword)
 
+// desactivate account
+router.put('/users/delete-account/:id', verifyToken, userController.deleteAccount)
+
 module.exports = router;

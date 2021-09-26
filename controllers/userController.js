@@ -130,3 +130,21 @@ exports.resetPassword = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' })
     }
 }
+
+// desactivate account
+exports.deleteAccount = async (req, res) => {
+    try {
+        const user = await User.findById(req.params.id)
+        const compare = await bcrypt.compare(req.body.password, user.password)
+        if (compare == true) {
+            const deleteUser = await User.findByIdAndDelete(req.params.id)
+            res.status(200).json({ message: "Password reset successfully" })
+        } else {
+            res.status(400).json({ message: "Invalid password" })
+
+        }
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' })
+    }
+}
