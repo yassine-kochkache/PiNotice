@@ -116,8 +116,7 @@ exports.desaffectAdminRole = async (req, res) => {
 exports.resetPassword = async (req, res) => {
     try {
         const user = await User.findById(req.params.id)
-        const oldPassword = await bcrypt.hash(req.body.oldPassword, 10);
-        const compare = await bcrypt.compare(user.password, oldPassword)
+        const compare = await bcrypt.compare(req.body.oldPassword, user.password)
         if (compare == true) {
             const newPassword = await bcrypt.hash(req.body.newPassword, 10)
             const newUser = await User.findByIdAndUpdate(req.params.id, { password: newPassword })
