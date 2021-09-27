@@ -167,7 +167,7 @@ exports.desaffectTag = async (req, res) => {
 // get all full events
 exports.getAllFullEvents = async (req, res) => {
     try {
-        const fullEvents = await Event.find({}).populate({ path: 'owner tags', select: 'firstName lastName email address avatar name description -_id' });
+        const fullEvents = await Event.find({}).populate({ path: 'owner tags', select: 'firstName lastName email address avatar name description' });
         res.status(200).json(fullEvents);
     } catch (err) {
         console.log(err);
