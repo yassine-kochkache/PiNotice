@@ -12,16 +12,16 @@ const userSchema = new Schema({
         type: Date, validate: {
             validator: function (validation) {
                 const currentTime = new Date();
-                const curretYear = currentTime.getFullYear()
+                const currentYear = currentTime.getFullYear()
                 const currentMonth = currentTime.getMonth()
                 const currentDay = currentTime.getDate()
                 const ageYear = validation.getFullYear() + 16
                 const ageMonth = validation.getMonth()
                 const ageDay = validation.getDate()
-                if (curretYear >= ageYear && currentMonth >= ageMonth && currentDay >= ageDay) {
-                    return true
+                if (currentYear < ageYear || (currentYear == ageYear && currentMonth < ageMonth) || (currentYear == ageYear && currentMonth == ageMonth && currentDay < ageDay)) {
+                    return false
                 } else {
-                    return false;
+                    return true
                 }
             },
             message: "You must be at least 16 years old"
