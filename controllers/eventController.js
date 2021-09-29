@@ -100,7 +100,7 @@ exports.deleteEvent = async (req, res) => {
         const token = req.headers.authorization.split(" ").pop();
         const decodedToken = await jwt.decode(token);
         if (decodedToken.role === "admin" && eventToDelete.owner._id !== decodedToken.userId) {
-            createNotif("delete", decodedToken.userId, eventToDelete._id, 'your event, ' + eventToDelete.title + ', has been deleted by and admin : ', eventToDelete.owner._id)
+            createNotif("delete", decodedToken.userId, eventToDelete._id, 'your event has been deleted by and admin : \n' + eventToDelete.title, eventToDelete.owner._id)
         }
         const deletedEvent = await Event.findByIdAndDelete(req.params.eventId);
         desaffectEvent(res, req.params.connectedUserId, req.params.eventId)
