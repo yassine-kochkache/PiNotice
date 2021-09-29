@@ -2,6 +2,10 @@ const Event = require('../models/eventSchema');
 const desaffectEvent = require('../middlewares/desaffect-event')
 const affectEvent = require('../middlewares/affect-event')
 const Tag = require('../models/tagSchema')
+const jwt = require("jsonwebtoken");
+const createNotif = require("../middlewares/notification")
+
+
 
 // add event
 exports.addEvent = async (req, res) => {
@@ -92,9 +96,19 @@ exports.updateEvent = async (req, res) => {
 // delete event
 exports.deleteEvent = async (req, res) => {
     try {
+        const eventToDelete = await Event.findById(req.params.eventId);
+        const token = req.headers.authorization.split(" ").pop();
+        const decodedToken = await jwt.decode(token);
+        if (decodedToken.role === "admin" && eventToDelete.owner._id !== decodedToken.userId) {
+            createNotif("delete", decodedToken.userId, eventToDelete._id, 'your event, ' + eventToDelete.title + ', has been deleted by and admin : ', eventToDelete.owner._id)
+        }
         const deletedEvent = await Event.findByIdAndDelete(req.params.eventId);
-        // desaffect event from owner automatically
         desaffectEvent(res, req.params.connectedUserId, req.params.eventId)
+
+        // create notification if deleted by admin 
+
+
+
         res.status(200).json({ message: 'Event deleted successfully' });
     } catch (err) {
         console.log(err);

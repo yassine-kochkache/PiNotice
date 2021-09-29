@@ -6,6 +6,7 @@ const sendEmail = require("../utils/email/sendEmail")
 const pdf = require("pdf-creator-node");
 const fs = require("fs");
 const ejs = require("ejs");
+const createNotif = require("../middlewares/notification")
 
 exports.reservation = async (req, res) => {
     try {
@@ -88,6 +89,8 @@ exports.reservation = async (req, res) => {
             // update the ticketpath 
             newTicket.ticketPath = `http://localhost:3000/tickets/${newTicket._id}.pdf`;
             await newTicket.save();
+            // create notification
+            createNotif("book", user._id, event._id, 'has booked for your event : ')
             // return statement
             res.status(200).json({ message: "Reservation success", ticket: ticketData })
         } else {
