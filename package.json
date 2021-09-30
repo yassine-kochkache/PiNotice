@@ -38,6 +38,7 @@
     "passport": "^0.4.1",
     "passport-http-bearer": "^1.0.1",
     "pdf-creator-node": "^2.2.4",
-    "qrcode": "^1.4.4"
+    "qrcode": "^1.4.4",
+    "socket.io": "^4.2.0"
   }
 }

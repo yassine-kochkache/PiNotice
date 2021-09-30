@@ -10,7 +10,7 @@ const createNotif = require("../middlewares/notification")
 
 exports.reservation = async (req, res) => {
     try {
-        const event = await Event.findById(req.params.eventId)
+        const event = await Event.findById(req.params.eventId).populate({ path: 'owner' })
         const user = await User.findById(req.params.userId)
         // checking event available tickets 
         if (event.availableTicketNumber > 0) {
@@ -91,6 +91,10 @@ exports.reservation = async (req, res) => {
             await newTicket.save();
             // create notification
             createNotif("book", user._id, event._id, 'has booked for your event : ')
+            const io = req.app.get('io')
+            const usersArray = req.app.get('usersArray')
+            const notify = { text: "Somone has booked ofr your event" }
+            io.to(usersArray[event.owner._id]).emit('notification', notify);
             // return statement
             res.status(200).json({ message: "Reservation success", ticket: ticketData })
         } else {
