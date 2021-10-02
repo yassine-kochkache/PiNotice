@@ -17,7 +17,7 @@ const maxFileSize = 1 * 1024 * 1024;
 
 async function fileFilterFunction(req, file, cb) {
     try {
-        const userVerif = await User.findOne({ email: req.body.email.toLowerCase() })
+        const userVerif = await User.findOne({ email: req.body.email })
         const allowedExtetions = [".png", ".jpg", ".jpeg"]
         const extention = path.extname(file.originalname)
 

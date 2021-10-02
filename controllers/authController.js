@@ -6,7 +6,7 @@ const bcrypt = require("bcrypt");
 exports.login = async (req, res) => {
     try {
         const userDb = await User.findOne({
-            email: req.body.email.toLowerCase(),
+            email: req.body.email,
         });
         if (userDb) {
             const result = await bcrypt.compare(req.body.password, userDb.password);
@@ -47,7 +47,7 @@ exports.register = async (req, res) => {
             const userData = {
                 firstName: req.body.firstName,
                 lastName: req.body.lastName,
-                email: req.body.email.toLowerCase(),
+                email: req.body.email,
                 password: hash,
                 birthDate: req.body.birthDate,
                 phone: req.body.phone,
