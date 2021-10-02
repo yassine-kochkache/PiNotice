@@ -7,7 +7,8 @@ const notificationSchema = new Schema({
     user: { type: Schema.Types.ObjectId, ref: 'User' },
     event: { type: Schema.Types.ObjectId, ref: 'Event' },
     text: String,
-    notifType: String
+    notifType: String,
+    seen: { type: Boolean, default: false }
 }, {
     timestamps: true,
     versionKey: false

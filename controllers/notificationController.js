@@ -9,3 +9,16 @@ exports.getNotifications = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' })
     }
 }
+exports.seeNotifications = async (req, res) => {
+    try {
+        const notifications = await Notification.updateMany({ owner: req.params.userId }, {
+            seen: true,
+        }, {
+            multi: true
+        });
+        res.status(200).json(notifications)
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ message: 'Internal server error' })
+    }
+}
