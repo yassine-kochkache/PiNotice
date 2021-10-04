@@ -109,11 +109,6 @@ exports.deleteEvent = async (req, res) => {
         const deletedNotification = deleteNotification(req.params.eventId)
         const deletedEvent = await Event.findByIdAndDelete(req.params.eventId);
         desaffectEvent(res, req.params.connectedUserId, req.params.eventId)
-
-        // create notification if deleted by admin 
-
-
-
         res.status(200).json({ message: 'Event deleted successfully' });
     } catch (err) {
         console.log(err);
