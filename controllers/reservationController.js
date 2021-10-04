@@ -90,9 +90,8 @@ exports.reservation = async (req, res) => {
             // create notification
             createNotif("book", user._id, event._id, 'has booked for your event : ')
             const io = req.app.get('io')
-            const usersArray = req.app.get('usersArray')
-            const notify = { text: "Somone has booked ofr your event" }
-            io.to(usersArray[event.owner._id]).emit('notification', notify);
+            const notify = { text: "Somone has booked ofr your event", to: event.owner._id, from: user._id }
+            io.emit('notification', notify);
             // return statement
             res.status(200).json({ message: "Reservation success", ticket: ticketData })
         } else {
