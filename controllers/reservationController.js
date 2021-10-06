@@ -50,9 +50,7 @@ exports.reservation = async (req, res) => {
 
             // taking one ticket out of stock
             const ticketPath = 'ticket/' + event.title + '/' + user.firstName + "-" + user.lastName;
-
-            const modifiedTickets = event.availableTicketNumber - 1
-            const updatedEvent = await Event.findByIdAndUpdate(event._id, { availableTicketNumber: modifiedTickets }, { new: true })
+            await Event.findByIdAndUpdate(event._id, { "$inc": { availableTicketNumber: -1 } }, { new: true })
             const html = fs.readFileSync("./utils/email/template/ticketTemplate.html", "utf8");
             const renderOptions = {
                 qrcodeLink: `http://localhost:3000/qrCodes/${newTicket._id}.png`,
@@ -92,9 +90,8 @@ exports.reservation = async (req, res) => {
             // create notification
             createNotif("book", user._id, event._id, 'has booked for your event : ')
             const io = req.app.get('io')
-            const usersArray = req.app.get('usersArray')
-            const notify = { text: "Somone has booked ofr your event" }
-            io.to(usersArray[event.owner._id]).emit('notification', notify);
+            const notify = { text: "Somone has booked ofr your event", to: event.owner._id, from: user._id }
+            io.emit('notification', notify);
             // return statement
             res.status(200).json({ message: "Reservation success", ticket: ticketData })
         } else {
