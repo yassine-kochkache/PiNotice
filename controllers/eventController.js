@@ -1,50 +1,24 @@
 const Event = require('../models/eventSchema');
 const desaffectEvent = require('../middlewares/desaffect-event')
 const affectEvent = require('../middlewares/affect-event')
-const Tag = require('../models/tagSchema')
 const jwt = require("jsonwebtoken");
-const createNotif = require("../middlewares/notification")
-const deleteNotif = require("../middlewares/deleteNotification");
-const deleteNotification = require('../middlewares/deleteNotification');
+const fs = require('fs');
+
 
 // add event
 exports.addEvent = async (req, res) => {
     try {
-        const tagNamesList = JSON.parse(req.body.tags)
-        let tagIdList = [];
-        for (let i = 0; i < tagNamesList.length; i++) {
-            const element = tagNamesList[i];
-            let tag = await Tag.find({ name: element })
-            let tagId = tag[0]._id;
-            tagIdList.push(tagId)
-        }
-        let myEventType
-        if (req.body.eventType == '0') {
-            myEventType = "Free"
-        } else {
-            myEventType = "Payable"
-        }
         const eventData = {
             image: req.file.filename,
             title: req.body.title,
             description: req.body.description,
-            price: parseInt(req.body.price) || undefined,
-            startDateTime: req.body.startDateTime,
-            endDateTime: req.body.endDateTime,
-            location: req.body.location,
             owner: req.params.connectedUserId,
-            availableTicketNumber: parseInt(req.body.availableTicketNumber),
-            eventType: myEventType,
-            tags: tagIdList
+            eventType: req.body.eventType
         }
-        if (!("image" in eventData && "title" in eventData && "description" in eventData && "startDateTime" in eventData && "endDateTime" in eventData && "location" in eventData && "availableTicketNumber" in eventData && "eventType" in eventData)) {
-            res.status(400).json({ message: "Empty Field !" })
-        } else {
             const newEvent = await Event.create(eventData)
             // event affectation automatically
             affectEvent(res, req.params.connectedUserId, newEvent._id)
             res.status(200).json({ message: "event created successfully" })
-        }
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: "Internal server error" })
@@ -54,39 +28,16 @@ exports.addEvent = async (req, res) => {
 // update event
 exports.updateEvent = async (req, res) => {
     try {
-        const tagNamesList = req.body.tags
-        let tagIdList = [];
-        for (let i = 0; i < tagNamesList.length; i++) {
-            const element = tagNamesList[i];
-            let tag = await Tag.find({ name: element })
-            let tagId = tag[0]._id;
-            tagIdList.push(tagId)
-        }
-        let myEventType
-        if (req.body.eventType == '0') {
-            myEventType = "Free"
-        } else {
-            myEventType = "Payable"
-        }
         const eventData = {
+            image: req.file.filename,
             title: req.body.title,
             description: req.body.description,
-            price: parseInt(req.body.price) || undefined,
-            startDateTime: req.body.startDateTime,
-            endDateTime: req.body.endDateTime,
-            location: req.body.location,
             owner: req.params.connectedUserId,
-            availableTicketNumber: parseInt(req.body.availableTicketNumber),
-            eventType: myEventType,
-            tags: tagIdList
+            eventType: req.body.eventType
         }
-        if (!("title" in eventData && "description" in eventData && "startDateTime" in eventData && "endDateTime" in eventData && "location" in eventData && "availableTicketNumber" in eventData && "eventType" in eventData)) {
-            res.status(400).json({ message: "Empty Field !" })
-        } else {
-
             const updatedEvent = await Event.findByIdAndUpdate(req.params.id, eventData, { new: true });
             res.status(200).json({ message: "event updated successfully", updatedEvent });
-        }
+        
     } catch (err) {
         console.log(err);
         res.status(500).json({ message: 'Internal server error' })
@@ -99,15 +50,17 @@ exports.deleteEvent = async (req, res) => {
         const eventToDelete = await Event.findById(req.params.eventId).populate({ path: 'owner' });
         const token = req.headers.authorization.split(" ").pop();
         const decodedToken = await jwt.decode(token);
-        if (decodedToken.role === "admin" && eventToDelete.owner._id !== decodedToken.userId) {
-            createNotif("delete", decodedToken.userId, eventToDelete._id, 'your event has been deleted by and admin : \n' + eventToDelete.title, eventToDelete.owner._id)
-            const io = req.app.get('io')
-            const usersArray = req.app.get('usersArray')
-            const notify = { text: "An Admin has deleted one of your events" }
-            io.to(usersArray[eventToDelete.owner._id]).emit('notification', notify);
-        }
-        const deletedNotification = deleteNotification(req.params.eventId)
+        // if (decodedToken.role === "admin" && eventToDelete.owner._id !== decodedToken.userId) {
+        //     createNotif("delete", decodedToken.userId, eventToDelete._id, 'your event has been deleted by and admin : \n' + eventToDelete.title, eventToDelete.owner._id)
+        //     const io = req.app.get('io')
+        //     const usersArray = req.app.get('usersArray')
+        //     const notify = { text: "An Admin has deleted one of your events" }
+        //     io.to(usersArray[eventToDelete.owner._id]).emit('notification', notify);
+        // }
+        // const deletedNotification = deleteNotification(req.params.eventId)
         const deletedEvent = await Event.findByIdAndDelete(req.params.eventId);
+        const filePath = './uploads/event-pics/' + deletedEvent.image
+        fs.unlinkSync(filePath);
         desaffectEvent(res, req.params.connectedUserId, req.params.eventId)
         res.status(200).json({ message: 'Event deleted successfully' });
     } catch (err) {
@@ -126,6 +79,8 @@ exports.updateEventImage = async (req, res) => {
             res.status(400).json({ message: "Empty Field !" })
         } else {
             const updatedEvent = await Event.findByIdAndUpdate(req.params.id, eventData, { new: true });
+            const filePath = './uploads/event-pics/' + updatedEvent.image
+            fs.unlinkSync(filePath);
             res.status(200).json({ message: "event pictutre updated successfully", updatedEvent });
         }
     } catch (err) {
@@ -181,7 +136,8 @@ exports.desaffectTag = async (req, res) => {
 // get all full events
 exports.getAllFullEvents = async (req, res) => {
     try {
-        const fullEvents = await Event.find({}).populate({ path: 'owner tags', select: 'firstName lastName email address avatar name description' });
+        const fullEvents = await Event.find({})
+        .populate({ path: 'owner', select: '-password -events -createdAt -updatedAt' });
         res.status(200).json(fullEvents);
     } catch (err) {
         console.log(err);
@@ -192,7 +148,7 @@ exports.getAllFullEvents = async (req, res) => {
 // get event by id 
 exports.getEvent = async (req, res) => {
     try {
-        const fullEvent = await Event.findById(req.params.id).populate({ path: 'owner tags', select: 'firstName lastName email address avatar name description -_id' });
+        const fullEvent = await Event.findById(req.params.id).populate({ path: 'owner', select: '-password -events -createdAt -updatedAt' });
         res.status(200).json(fullEvent);
     } catch (err) {
         console.log(err);

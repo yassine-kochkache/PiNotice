@@ -16,7 +16,7 @@ exports.getAllUsers = async (req, res) => {
 // get user by id
 exports.getUser = async (req, res) => {
     try {
-        const user = await User.findById(req.params.id).populate({ path: 'events', populate: 'tags', select: '-owner' });
+        const user = await User.findById(req.params.id).populate({ path: 'events', select: '-owner' });
         res.status(200).json(user);
     } catch (err) {
         console.log(err);
@@ -61,6 +61,8 @@ exports.updateUsersAvatar = async (req, res) => {
 exports.deletUser = async (req, res) => {
     try {
         const deletedUser = await User.findByIdAndDelete(req.params.id);
+        const filePath = './uploads/avatars/' + deletedUser.avatar
+        fs.unlinkSync(filePath);
         res.status(200).json({ message: 'User deleted successfully' });
     } catch (err) {
         console.log(err);
