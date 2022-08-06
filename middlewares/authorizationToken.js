@@ -16,7 +16,6 @@ async (req, res) => {
             role: decodedToken.role,
         };
     } catch (error) {
-        // console.log(error.name);
         if (error.name === "TokenExpiredError") {
             let errors = {};
             Object.keys(error.errors).forEach((key) => {

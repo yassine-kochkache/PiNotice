@@ -6,7 +6,7 @@ exports.addEvenetType = async (req, res) => {
         const eventData = {
             title: req.body.title.toLowerCase()
         }
-        const foundEvenet = await EventType.findOne({ name: eventData.title })
+        const foundEvenet = await EventType.findOne({ title: eventData.title })
         if (foundEvenet) {
             res.status(400).json({ message: "this event type already exists" })
         } else {

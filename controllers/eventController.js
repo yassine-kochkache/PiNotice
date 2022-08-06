@@ -9,7 +9,7 @@ const fs = require('fs');
 exports.addEvent = async (req, res) => {
     try {
         const eventData = {
-            image: req.file.filename,
+            image: req.file?.filename,
             title: req.body.title,
             description: req.body.description,
             owner: req.params.connectedUserId,
@@ -29,7 +29,7 @@ exports.addEvent = async (req, res) => {
 exports.updateEvent = async (req, res) => {
     try {
         const eventData = {
-            image: req.file.filename,
+            image: req.file?.filename,
             title: req.body.title,
             description: req.body.description,
             owner: req.params.connectedUserId,
@@ -59,8 +59,10 @@ exports.deleteEvent = async (req, res) => {
         // }
         // const deletedNotification = deleteNotification(req.params.eventId)
         const deletedEvent = await Event.findByIdAndDelete(req.params.eventId);
-        const filePath = './uploads/event-pics/' + deletedEvent.image
-        fs.unlinkSync(filePath);
+        if(deletedEvent.image){
+            const filePath = './uploads/event-pics/' + deletedEvent.image
+            fs.unlinkSync(filePath);
+        }
         desaffectEvent(res, req.params.connectedUserId, req.params.eventId)
         res.status(200).json({ message: 'Event deleted successfully' });
     } catch (err) {
@@ -78,9 +80,12 @@ exports.updateEventImage = async (req, res) => {
         if (!("image" in eventData)) {
             res.status(400).json({ message: "Empty Field !" })
         } else {
+            const EventBeforeUpdating = await Event.findById(req.params.id)
             const updatedEvent = await Event.findByIdAndUpdate(req.params.id, eventData, { new: true });
-            const filePath = './uploads/event-pics/' + updatedEvent.image
-            fs.unlinkSync(filePath);
+            if(EventBeforeUpdating.image){
+                const filePath = './uploads/event-pics/' + EventBeforeUpdating.image
+                fs.unlinkSync(filePath);
+            }   
             res.status(200).json({ message: "event pictutre updated successfully", updatedEvent });
         }
     } catch (err) {

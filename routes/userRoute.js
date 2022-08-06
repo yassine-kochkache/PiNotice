@@ -8,7 +8,7 @@ const updateAvatar = require('../middlewares/updateProfileAvatar')
 router.get('/users', verifyToken, userController.getAllUsers)
 
 // get user by id
-router.get('/users/:id', userController.getUser)
+router.get('/users/:id',verifyToken, userController.getUser)
 
 // update user
 

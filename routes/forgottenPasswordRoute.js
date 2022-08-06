@@ -8,7 +8,7 @@ router.post('/forgottenPassword', forgottenPasswordController.forgotPassword)
 
 // rest password route
 
-router.post('/resetPassword/', forgottenPasswordController.resetPassword)
+router.post('/resetPassword', forgottenPasswordController.resetPassword)
 
 
 
